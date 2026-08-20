@@ -1399,3 +1399,34 @@ Worth the human's attention: this is the second consecutive run where the actual
 - Extend `chain_contract_audit.py` to column contracts (header row content, not just tab names). Two runs of evidence now.
 - Decide whether the FMEDA echo tab should show `dc_raw` text instead of the numeric midpoint. Small, but it is a real display-semantics choice.
 - `build_fmeda_worksheet()`'s unused `mechanisms` param — still unfiled after two passes. Either wire it into "Allocated Mechanism" or drop it.
+
+## 2026-08-20 (autonomous run, POLISH)
+
+**Mode:** POLISH
+**Action:** #51 `autosar-bsw-config-builder` polished — first pass on the `autosar` domain; four small fixes applied, two real defects found and filed (#54, #55).
+**Files touched:** `skills/autosar-bsw-config-builder.skill` (SKILL.md, `scripts/generate_bsw.py`, `scripts/recalc.py`, new `examples/sample_input.json`), `docs/skill-polish-log/autosar-bsw-config-builder.md` (new), `examples/autosar-bsw-config-builder/README.md` (new), `STATUS.md` (regen), `docs/chain-contract-audit.md` (regen), `docs/AUTONOMOUS_LOG.md`
+**Tests:** N/A (no test suite in this repo yet) — verified by executing the builder from its new sample input and then the paired reviewer against that output, both from the **repacked** `.skill` archives rather than a loose working copy
+**Skill count:** 76 builders / 76 reviewers / 100% paired (2 via alias registry) — red 0 / yellow 59 / green 17
+**Open issues:** 13 (11 carried + #54, #55 opened this run)
+
+**Notes:** Back on plan after yesterday's deliberate detour — #51 was the Wednesday slot that #53 displaced, and it ran clean. No `skill-bug` issue outranked it: all 11 carried issues are DoD-met, so priority rule (a) applied to the DoD-open subset points at the W34 table.
+
+Good news first, because it is worth recording. The builder→reviewer contract here is **intact** — every one of the nine sheet names `bsw_probe.py` looks for is emitted by the builder under exactly that name, with matching column positions. That is the shape that broke in #43 and #53, and #46 explicitly deferred builder→reviewer pairs as unaudited. One hand-checked pair is not an audit, but it is a datapoint against the assumption that these pairs are quietly rotting.
+
+The real finding is worse than a broken tab name. `generate_bsw.py` documents `memory_layout` and `bus_interfaces` in its input schema, accepts both without error, and writes neither — `build_memory_map(wb)` takes no data argument at all. That alone is the familiar #53 silent-drop shape. What makes it worth a HIGH is what happens next: the reviewer's `check_memory_allocation` returns `NA — "No memory regions defined"` when it finds an empty Memory Map, so an analyst who supplied four memory regions gets a **Mandatory check scored not-applicable on their own data**. The gap does not merely go unreported; it is affirmatively laundered into a clean audit line. A second check, `check_nvm_alignment` (C006, also Mandatory), is structurally dead for a different reason: it matches `"NvM" in module_id`, but `module_id` holds `SL005`, never a module name. Both filed as #54 with a DoD that insists builder and reviewer land in the same commit — fixing either alone makes the workbook *more* misleading, not less.
+
+The second finding came from asking why `recalc.py` was 39 bytes. Repo-wide scan: 146 of 152 skills ship the real 5,782-byte utility, 6 ship a placeholder comment — and those 6 are exactly the same 6 that use a `## Skills inventory` heading and carry a stray `scripts/__init__.py`. Exact overlap, three ways, across three autosar pairs. That is one mis-generated template batch, not three coincidences, which is a much cheaper thing to fix than three separate bugs. Filed as #55 with 5 files remaining.
+
+Four fixes applied, all small. The one I want flagged is `examples/sample_input.json`: the skill shipped **no** sample input, which made DoD item 2 ("smoke-tested from its own sample input") literally unsatisfiable — the only runnable path was a hard-coded one-module fallback inside `main()`. The sample deliberately includes the two fields that get dropped, so #54 is reproducible from a shipped artifact rather than from a scratch file that disappears with this session.
+
+One honest scope note, recorded so nobody reads the diff as bigger than it is: restoring `recalc.py` is a consistency and latent-defect fix, **not** an active bug repair. This builder emits zero formula cells — the recalc step had nothing to recalculate. Claiming otherwise would be the same overselling the #46 scanner did when it explained away its one real finding.
+
+Housekeeping: `/tmp/automotive-work` was root-owned again and `rm -rf` failed, third week running. Timestamped clone dir used. The task file should just adopt that permanently.
+
+**Follow-ups:**
+- Fix #54 on a POLISH day — builder and reviewer in one commit, per its DoD item 4. This is the highest-value open item in the repo now that #46 and #53 are done.
+- Fix #55's remaining 5 files. Mechanical, low-risk, but it touches 5 archives so it wants its own pass.
+- #52 `traceability-matrix-builder` (v&v) never got a day this week. Carry to W35 as first target, ahead of the `sysml-block-diagram-builder` candidate.
+- **Open count is now 13, and 11 of those are DoD-met.** This is the fifth consecutive week the standing close list has grown without anything closing. The autonomous rule against closing issues is correct, but the backlog is now actively distorting PLAN's priority rule (a) — a human close pass is overdue and would take ten minutes.
+- Extend `chain_contract_audit.py` to column contracts. Third run of evidence: #54's C006 defect is a column-semantics failure the tab-name scanner cannot see.
+- Consider extending the audit to builder→reviewer pairs after all. Today's pair checked out by hand in about five minutes; the scanner could do all 76.
