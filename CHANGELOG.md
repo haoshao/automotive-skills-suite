@@ -8,6 +8,23 @@ from `[Unreleased]` into a dated section at each weekly release.
 
 _W34 (2026-08-17 → ). Accumulating since v2026.08.W33 (2026-08-15). Ships at the next Saturday RELEASE run._
 
+### Polish
+- **Repo-wide chain-contract audit** — W34 target (Tue 2026-08-18, #46) after five consecutive weeks of being carried and never started. Landed only because Monday descoped it to builder-to-builder reads and slotted it *first* instead of last. `scripts/chain_contract_audit.py` + `docs/chain-contract-audit.md` committed; read-only, modifies no `.skill` file. Found one silent BREAK — `fmeda-builder`'s TSC reader — filed as #53 (`5fa7109`)
+- **fmeda-builder** — (Wed 2026-08-19, #53): the break the audit found, fixed the day after it was found. The TSC reader expected sheet names the current `tsc-builder` no longer emits, so safety-mechanism allocations were silently absent from the FMEDA worksheet — no exception, no warning, the same failure shape as #43. Repo chain breaks now zero (`ec8fc8e`)
+- **autosar-bsw-config-builder** — W34 target (Thu 2026-08-20, #51): first pass on the largest never-polished domain. Gained `examples/sample_input.json` and a real `recalc.py` (restored byte-identical from `autosar-swc-builder`, import verified); the `## Skills inventory` heading corrected. Two defects found and deliberately *not* fixed in the same pass — filed as #54 and #55 rather than expanded into a refactor (`15d4c8b`)
+
+### Docs
+- W34 weekly plan published (Mon 2026-08-17) — 3 targets for 3 polish days, down from W33's 4-for-3; #46 descoped and moved to first slot, #51 and #52 opened (`547ced0`)
+- W34 DOCS roll (Fri 2026-08-21): `[Unreleased]` filled with the three polish entries above; 2 reviewer-side example stubs added — `fmeda-checklist-reviewer` and `autosar-bsw-config-checklist-reviewer`, the paired reviewers of both builders touched this week. Written against the actual archives rather than the SKILL.md prose, which surfaced two more check-count drifts (below). STATUS regenerated via `scripts/regen_status.py` — 76/76 paired, 16 fresh / 60 stale / 0 orphan (this commit)
+
+### Known issues _(found this week, deliberately not fixed)_
+- `fmeda-checklist-reviewer` — `SKILL.md` says "14 + 14 checks" and labels the Confirmation Review tab "14 generic doc-quality checks"; `check_definitions.py` registers **18** `CR` entries, so the true total is **36** (18 CR + 14 FMEDAA + 4 VA), not 28. Found during the Friday stub write
+- `autosar-bsw-config-checklist-reviewer` — `SKILL.md` advertises "~30 compliance checks" and the `check_definitions.py` docstring repeats it; the file defines **9** (`C001`–`C009`). Off by more than 3×. Should fold into the #55 batch pass, which already opens this SKILL.md
+- Both are the same drift class as `cs-architecture-checklist-reviewer` (42 → 43) and both require a `.skill` zip repack, i.e. POLISH-mode work
+
+### Not done this week
+- **#52 (`traceability-matrix-builder`, v&v)** was Thursday's slot and was displaced by #53. That was the right call — #53 was a live chain break found by Tuesday's own audit, and fixing it the next day is the audit paying for itself — but it means W34 landed 3 of 4 items, and the v&v domain is *still* never-polished. #52 should take the first polish slot in W35, the way #46 did in W34
+
 ### Carried forward
 - Four known defects shipped with v2026.08.W33 remain open and all require a `.skill` zip repack: `cdd-checklist-reviewer` dangling `references/` pointers; `cs-architecture-checklist-reviewer` check count 42 → 43 and 14 → 15 VA; the two interacting `sotif-analysis-checklist-reviewer` probe defects; and the 19 over-length sheet names in `docs/sheet-name-length-audit.md`. See the v2026.08.W33 section of `RELEASES.md`
 

@@ -1430,3 +1430,29 @@ Housekeeping: `/tmp/automotive-work` was root-owned again and `rm -rf` failed, t
 - **Open count is now 13, and 11 of those are DoD-met.** This is the fifth consecutive week the standing close list has grown without anything closing. The autonomous rule against closing issues is correct, but the backlog is now actively distorting PLAN's priority rule (a) — a human close pass is overdue and would take ten minutes.
 - Extend `chain_contract_audit.py` to column contracts. Third run of evidence: #54's C006 defect is a column-semantics failure the tab-name scanner cannot see.
 - Consider extending the audit to builder→reviewer pairs after all. Today's pair checked out by hand in about five minutes; the scanner could do all 76.
+
+## 2026-08-21 (autonomous run, DOCS)
+
+**Mode:** DOCS
+**Action:** W34 changelog roll — `[Unreleased]` filled with three polish entries, two known-issue drifts and an explicit "not done this week" row; 2 reviewer-side example stubs written from the archives; STATUS regenerated via the committed script.
+**Files touched:** `CHANGELOG.md`, `examples/fmeda-checklist-reviewer/README.md` (new), `examples/autosar-bsw-config-checklist-reviewer/README.md` (new), `STATUS.md` (regen), `docs/AUTONOMOUS_LOG.md`
+**Tests:** N/A (no test suite in this repo yet) — stubs written against the unpacked `.skill` archives, with every count taken from `check_definitions.py` rather than from SKILL.md prose
+**Skill count:** 76 builders / 76 reviewers / 100% paired (2 via alias registry) — red 0 / yellow 60 / green 16
+**Open issues:** 12
+
+**Notes:** Quiet, mechanical run, which is what Friday should be. `scripts/regen_status.py` did its job for the second week — one script call, 76/76 paired with both alias rows honored, no inline reimplementation and therefore no repeat of the 2026-08-13 false-orphan regression. Worth noting that the freshness split moved the wrong way (17 green yesterday → 16 today) purely because a 30-day window rolled past a skill nobody touched; that number will keep drifting down between polish days and is not a signal.
+
+No new skills shipped this week, so the README skill table needed no row — only two builders were modified, both already had example READMEs. Per the W32/W33 precedent I wrote the **paired reviewer** stubs instead: `fmeda-checklist-reviewer` and `autosar-bsw-config-checklist-reviewer`.
+
+Writing those against the archives rather than the prose paid for itself again, third week running — both reviewers misstate their own check counts. `fmeda-checklist-reviewer` claims "14 + 14" and labels its CR tab 14; `check_definitions.py` registers **18** CR entries, so the real total is 36, not 28. `autosar-bsw-config-checklist-reviewer` is the worse of the two: SKILL.md and the module docstring both say "~30 compliance checks" and the file defines **9**. That one is off by more than 3×, and it is not a cosmetic count problem — an analyst reading "~30" reasonably assumes broad coverage from a tool that runs nine checks, two of which (#54) cannot fire against real builder output at all. Neither fixed: both need a `.skill` repack, which is POLISH work. The BSW count should ride along with #55, which already opens that exact SKILL.md.
+
+Judgement call recorded in the changelog rather than buried here: W34 landed **3 of 4** items, not 4 of 4. #52 (`traceability-matrix-builder`, v&v) lost Thursday to #53. That was correct triage — #53 was a live chain break surfaced by Tuesday's own audit, and fixing it inside 24 hours is the audit justifying its five-week carry — but the honest read is that v&v is still a never-polished domain and #52 is now a carried target, not a completed one. I added a "Not done this week" section to `[Unreleased]` so Saturday's release notes cannot quietly round that up.
+
+One thing changed outside the automation: **open issues went 13 → 12, and #53 is gone from the list.** A human closed it. That is the first close in five weeks of the backlog only growing, and it is the right one to have closed — but the other 11 DoD-met issues are still open and still distorting PLAN's priority rule (a). Also: `/tmp/automotive-work` deleted cleanly this run, unlike the last three weeks. Not treating that as fixed.
+
+**Follow-ups:**
+- **#52 takes the first polish slot Tuesday**, ahead of anything new — same treatment #46 got in W34, for the same reason (it loses every week it is slotted last).
+- #54 remains the highest-value open item: builder and reviewer must land in one commit per its DoD item 4.
+- Fold the `autosar-bsw-config-checklist-reviewer` "~30 → 9" count correction into the #55 batch pass; add the `fmeda-checklist-reviewer` "28 → 36" correction to whichever pass next opens that archive.
+- Saturday RELEASE has real content this week (3 polish commits + this docs roll) — tag `v2026.08.W34`, and carry the "Not done this week" note into RELEASES.md verbatim.
+- The check-count drift is now **four** skills deep (`cs-architecture`, `cdd`, `fmeda`, `autosar-bsw-config`). This is a repo-wide class, not four incidents. A ~20-line scanner comparing every reviewer's advertised count against `len(CHECKS)` would find the rest in one pass — worth a PLAN target of its own.
