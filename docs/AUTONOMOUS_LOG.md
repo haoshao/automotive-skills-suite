@@ -1456,3 +1456,32 @@ One thing changed outside the automation: **open issues went 13 → 12, and #53 
 - Fold the `autosar-bsw-config-checklist-reviewer` "~30 → 9" count correction into the #55 batch pass; add the `fmeda-checklist-reviewer` "28 → 36" correction to whichever pass next opens that archive.
 - Saturday RELEASE has real content this week (3 polish commits + this docs roll) — tag `v2026.08.W34`, and carry the "Not done this week" note into RELEASES.md verbatim.
 - The check-count drift is now **four** skills deep (`cs-architecture`, `cdd`, `fmeda`, `autosar-bsw-config`). This is a repo-wide class, not four incidents. A ~20-line scanner comparing every reviewer's advertised count against `len(CHECKS)` would find the rest in one pass — worth a PLAN target of its own.
+
+## 2026-08-22 (autonomous run, RELEASE)
+
+**Mode:** RELEASE
+**Action:** Cut `v2026.08.W34` — RELEASES.md section appended, CHANGELOG `[Unreleased]` rolled into a dated W34 section, STATUS regenerated, lightweight tag pushed. No GitHub Release object published; that stays a human click.
+**Files touched:** `RELEASES.md`, `CHANGELOG.md`, `STATUS.md` (regen), `docs/AUTONOMOUS_LOG.md`
+**Tests:** N/A (no test suite in this repo yet) — release is documentation-only; no `.skill` archive was opened or modified this run
+**Skill count:** 76 builders / 76 reviewers / 100% paired (2 via alias registry) — red 0 / yellow 66 / green 10
+**Open issues:** 12
+
+**Notes:** Real content to ship this week — 1 plan, 3 polish, 1 docs commit — so the release was cut rather than skipped. Tag `v2026.08.W34`, matching the ISO-week-of-year convention every prior tag uses (the task file's "ISO week within current month" wording would produce `W4` here and break the sequence; following the repo, not the prose, and flagging the discrepancy rather than silently switching schemes).
+
+The headline of this tag is a scheduling result, not a code result. `#46` was carried five weeks and started zero times; the only thing that changed in W34 was that Monday descoped it and put it **first**, and it landed Tuesday and found a live break the same day. Worth writing down because it generalises: a target that loses its slot every week is mis-slotted, not oversized.
+
+The freshness number needs a caveat and got one in RELEASES.md. STATUS went 16 🟢 → 10 🟢 overnight, which looks like a six-skill regression and is not: `fsc`, `hara`, `pfmea`, `ppap-package`, `sw-fmea` and `tsc` were all touched on 2026-07-22 in one batch and crossed the 30-day line together. I verified the diff before writing the number — six rows flipped 🟢→🟡, no other change. Left the metric as-is rather than smoothing it; the fix is a real polish cadence, not a nicer window.
+
+The "Not done this week" note from Friday was carried into the release notes verbatim, per the follow-up that asked for it. W34 shipped 3 of 4 targets, and `#52` / v&v is still never-polished.
+
+Check-count drift is now four skills deep and I have stopped treating it as a series of incidents. Two more surfaced this week purely because the stub writer reads archives instead of prose. `autosar-bsw-config-checklist-reviewer` advertising "~30 checks" while defining 9 is the worst instance found so far — a >3× overstatement of coverage on a tool whose output an analyst is meant to trust. Not fixable in RELEASE mode (needs a repack); it is the leading PLAN candidate for Monday.
+
+Housekeeping: `/tmp/automotive-work` deleted cleanly for the second run running. Not calling the root-owned-dir problem fixed until it survives a few more weeks.
+
+**Follow-ups:**
+- **Human action, ten minutes, highest leverage on the repo:** close the ten DoD-met issues (#43, #44, #45, #46, #47, #48, #49, #50, #51 and — after review — #53's siblings). PLAN's priority rule (a) ranks by open-issue references and is now reading a backlog that is 83% already-done work.
+- **Human action:** click Publish on the `v2026.08.W34` release in GitHub after reading `RELEASES.md`.
+- Monday PLAN: `#52` (`traceability-matrix-builder`, v&v) takes the first slot — same treatment `#46` got, for the same reason.
+- Monday PLAN: open a target for the repo-wide check-count scanner (~20 lines, compares each reviewer's advertised count against `len(CHECKS)`). Four confirmed instances is enough evidence; guessing at the remaining 72 by hand is not.
+- `#54` stays the highest-value skill-bug: builder and reviewer in one commit per its DoD item 4.
+- Reconcile the tag-naming wording in the task file with the tags actually in the repo, so a future run does not switch schemes mid-sequence.

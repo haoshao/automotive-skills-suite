@@ -6,7 +6,15 @@ from `[Unreleased]` into a dated section at each weekly release.
 
 ## [Unreleased]
 
-_W34 (2026-08-17 → ). Accumulating since v2026.08.W33 (2026-08-15). Ships at the next Saturday RELEASE run._
+_W35 (2026-08-24 → ). Accumulating since v2026.08.W34 (2026-08-22). Ships at the next Saturday RELEASE run._
+
+_Nothing yet — W35 opens with Monday's PLAN run._
+
+---
+
+## [v2026.08.W34] — 2026-08-22
+
+_W34 (2026-08-17 → 2026-08-22). Accumulating since v2026.08.W33 (2026-08-15). Shipped by the Saturday RELEASE run (2026-08-22)._
 
 ### Polish
 - **Repo-wide chain-contract audit** — W34 target (Tue 2026-08-18, #46) after five consecutive weeks of being carried and never started. Landed only because Monday descoped it to builder-to-builder reads and slotted it *first* instead of last. `scripts/chain_contract_audit.py` + `docs/chain-contract-audit.md` committed; read-only, modifies no `.skill` file. Found one silent BREAK — `fmeda-builder`'s TSC reader — filed as #53 (`5fa7109`)

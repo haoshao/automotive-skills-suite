@@ -4,6 +4,68 @@ Weekly snapshots of `github.com/jherrodthomas/automotive-skills-suite`. Tags are
 
 ---
 
+## v2026.08.W34 — 2026-08-22
+
+ISO week 34 (2026-08-17 → 2026-08-22). Accumulating since `v2026.08.W33` (2026-08-15).
+
+### Highlights
+
+- **The five-week carry finally landed, and it paid for itself inside 48 hours.** `#46` (repo-wide chain-contract audit) had been slotted last and displaced every week since W30. Monday descoped it to builder-to-builder sheet-name reads and slotted it *first*; it landed Tuesday, immediately found one silent BREAK in `fmeda-builder`'s TSC reader, and that break was fixed Wednesday. Repo chain breaks are now **zero**. The scheduling lesson — a target that loses every week is a target that is slotted wrong, not a target that is too big — is the most reusable thing in this tag.
+- **First pass on `autosar`, the largest never-polished domain.** `autosar-bsw-config-builder` gained a real `examples/sample_input.json` (previously the skill's own definition-of-done was unsatisfiable — there was no sample to smoke-test from) and a working `recalc.py`. Two further defects were found and deliberately *not* fixed in the same pass; they went out as `#54` and `#55` rather than being absorbed into a refactor.
+- **Check-count drift is now a repo-wide class, not four incidents.** Writing example stubs against the unpacked archives rather than the SKILL.md prose surfaced two more reviewers misstating their own check totals: `fmeda-checklist-reviewer` (claims 28, defines 36) and `autosar-bsw-config-checklist-reviewer` (claims "~30", defines 9 — off by more than 3×). With `cs-architecture` (42→43) and `cdd` that makes four confirmed. A scanner comparing every reviewer's advertised count against `len(CHECKS)` would find the rest in one pass; it is the leading PLAN candidate for W35.
+- **W34 landed 3 of 4, not 4 of 4.** `#52` (`traceability-matrix-builder`, v&v) lost Thursday's slot to `#53`. That was correct triage, but v&v remains a never-polished domain and `#52` is a carried target, not a completed one. Recorded here verbatim so the tag does not round it up.
+- Inventory unchanged at 76 builder + 76 reviewer pairs, 100% paired.
+
+### Changes this week
+
+**plan**
+- `547ced0` auto(plan): W34 descopes #46 after five carries, opens autosar and v&v targets
+
+**polish**
+- `5fa7109` auto(polish): #46 chain-contract audit lands, finds silent fmeda-to-TSC break (#53)
+- `ec8fc8e` auto(polish): fix #53 fmeda TSC reader, repo chain breaks now zero
+- `15d4c8b` auto(polish): #51 autosar-bsw-config gains sample input, drops two silent bugs to issues
+
+**docs**
+- `dd687bd` auto(docs): W34 changelog roll, two reviewer stubs expose check-count drift, STATUS regen
+
+**release** _(this snapshot commit)_
+- STATUS.md regenerated via `scripts/regen_status.py` (76/76 paired, 10 fresh / 66 stale / 0 orphan)
+- RELEASES.md appended with this section
+- CHANGELOG `[Unreleased]` rolled into `## [v2026.08.W34]`
+- `docs/AUTONOMOUS_LOG.md` updated with the RELEASE-mode entry
+
+### Skills inventory
+
+- Builders: 76
+- Reviewers: 76
+- Paired: 76/76 (100.0%, incl. 2 alias pairings per `docs/PAIRING_ALIASES.md`)
+- Freshness: 🟢 10 touched ≤30d · 🟡 66 stale · 🔴 0 orphan
+- Domain spread: safety=15, quality=10, comms=8, cyber=6, autosar=5, diagnostics=5, program-mgmt=5, v&v=5, aspice=4, sysml=4, calibration=3, mbse=3, sotif=3
+
+_Freshness moved 16 🟢 → 10 🟢 in a single day with no skill regressing. Six builders (`fsc`, `hara`, `pfmea`, `ppap-package`, `sw-fmea`, `tsc`) were all last touched on 2026-07-22 in one batch and crossed the 30-day line together. This is a window artifact, not a decline._
+
+### Open issues at snapshot
+
+12 open: #43, #44, #45, #46, #47, #48, #49, #50, #51, #52, #54, #55. **Ten of these have met their definition of done and remain open only because the autonomous run never closes issues.** Genuinely open work: `#52` (v&v polish, displaced from Thursday, takes W35's first slot), `#54` (`autosar-bsw-config` drops `memory_layout` and `bus_interfaces` silently; builder and reviewer must land in one commit) and `#55` (mis-generated template batch, 5 files remaining).
+
+`#53` was closed by a human during the week — the first close in five weeks of a backlog that only grew. The other ten DoD-met issues are now actively distorting the Monday PLAN priority rule, which ranks by "skills referenced by open issues". A human close pass is the single highest-leverage ten minutes available on this repo.
+
+### Known issues shipped with this tag
+
+New this week — both need a `.skill` zip repack, i.e. POLISH-mode work:
+
+- `fmeda-checklist-reviewer` — `SKILL.md` says "14 + 14 checks" and labels its Confirmation Review tab 14; `check_definitions.py` registers **18** `CR` entries, so the true total is **36** (18 CR + 14 FMEDAA + 4 VA), not 28
+- `autosar-bsw-config-checklist-reviewer` — `SKILL.md` and the `check_definitions.py` docstring both advertise "~30 compliance checks"; the file defines **9** (`C001`–`C009`). An analyst reading "~30" reasonably assumes coverage this tool does not have, and two of the nine cannot fire against real builder output at all (`#54`)
+
+Carried from `v2026.08.W33`, all still open, all requiring a repack: `cdd-checklist-reviewer` dangling `references/` pointers; `cs-architecture-checklist-reviewer` count 42→43 / 14→15 VA; the two interacting `sotif-analysis-checklist-reviewer` probe defects; and the 19 over-length sheet names in `docs/sheet-name-length-audit.md`.
+
+### Compare
+
+https://github.com/jherrodthomas/automotive-skills-suite/compare/v2026.08.W33...v2026.08.W34
+
+---
+
 ## v2026.08.W33 — 2026-08-15
 
 ISO week 33 (2026-08-10 → 2026-08-15). Accumulating since `v2026.08.W32` (2026-08-08).
