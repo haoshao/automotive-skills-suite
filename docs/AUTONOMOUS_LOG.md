@@ -1502,3 +1502,20 @@ Housekeeping: `/tmp/automotive-work` deleted cleanly for the second run running.
 - Human decision: #46 closes as met-against-descoped-DoD **or** re-scopes to the uncovered column-layout-drift remainder. Do not close it silently — the remainder is a real second failure mode.
 - Monday PLAN: real open work is only #52 (traceability-matrix, v&v) and the two autosar defects #54/#55. #54 and #55 are the strongest candidates — #55 is a 6-file template batch defect, so one fix pattern clears three pairs at once. `sysml-block-diagram-builder` remains the W35 lead for the last never-worked domain.
 - Still unaddressed after six runs: widen the 🟡 window to 90 days or drop the flag. 66 yellow / 10 green is noise, not signal.
+
+## 2026-08-24 (autonomous run, PLAN)
+
+**Mode:** PLAN
+**Action:** W35 plan written with three targets (#54, #55, #56); issue #56 opened for the sysml first pass; STATUS regenerated.
+**Files touched:** `docs/weekly/WEEK-2026-W35.md` (new), `STATUS.md`, `docs/AUTONOMOUS_LOG.md`
+**Tests:** N/A (no test suite in this repo yet)
+**Skill count:** 76 builders / 76 reviewers / 100% paired (2 via alias registry)
+**Open issues:** 13 after opening #56 — but only 3 (#54, #55, #56) are genuinely open; 10 are DoD-met and unclosed
+**Notes:** W34 landed all three targets, the first clean week since W27, and it validated the descoping decision — #46 shipped on the Tuesday it was slotted first after five weeks of carrying it last. The #51 pass overran into two days because it surfaced two real defects rather than swallowing them, which is the intended behaviour but cost #52 its slot; #52 is deferred to W36 with its DoD unchanged rather than re-slotted into an already-full week, and the plan records the marker to check if it slips twice. Two judgement calls this run. First, priority rule (a) was again applied to the DoD-open subset rather than the raw open list — filling the target table from 12 open issues would re-target ten finished ones, and this is the second consecutive week the rule has needed hand-filtering. Second, two of three targets are autosar, deliberately breaking domain spread: #54 is the only HIGH-severity correctness defect on the board and its failure mode is that dropped input launders into a *passing* mandatory check, which outranks variety. sysml takes the third slot, leaving mbse as the only domain never entered into a weekly table. No new issue was minted for #54 or #55 since both already exist; only #56 was created. The root-owned `/tmp/automotive-work` tree blocked the first clone for the third consecutive run — one aborted bash call, clone moved to a timestamped sibling.
+**Follow-ups:**
+- Tue: #54 (autosar-bsw-config memory_layout / bus_interfaces drop + C005/C006 reviewer repair)
+- Wed: #55 (restore recalc.py + fix heading in the remaining 5 autosar archives)
+- Thu: #56 (sysml-block-diagram-builder first pass)
+- W36 candidates: #52 (v&v, deferred) and `mbse-system-context-builder` (last unworked domain)
+- Human: close #43-#52; the 30-day stale rule is now actively misfiring on shipped work
+- Task file: make the `WORK` path timestamped so `rm -rf` cannot fail the run (third occurrence)
